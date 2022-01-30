@@ -18,7 +18,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: smokedlinq/dotnet-extensions/.github/actions/build@main
+    - uses: actions/checkout@v1
+
+    - uses: ./.github/actions/build
 
     - run: dotnet pack --configuration Release -p:Version=$($env:GITHUB_REF -replace '^refs/tags/v','') --output ./publish
 

@@ -3,10 +3,6 @@ description: 'Sets up the environment and builds the solution'
 runs:
   using: composite
   steps:
-  - uses: actions/checkout@v1
-    with:
-      fetch-depth: 0
-
   - uses: actions/setup-dotnet@v1
     with:
       dotnet-version: 6.0.x

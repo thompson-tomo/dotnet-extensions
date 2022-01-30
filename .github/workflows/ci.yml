@@ -24,6 +24,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: smokedlinq/dotnet-extensions/.github/actions/build@main
+    - uses: actions/checkout@v1
+
+    - uses: ./.github/actions/build
   
     - run: dotnet test --configuration Release --logger 'console;verbosity=detailed' /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
