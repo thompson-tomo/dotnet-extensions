@@ -6,7 +6,7 @@ on:
     - 'v*'
 
 permissions:
-  contents: read
+  contents: write
   packages: write
 
 concurrency:
@@ -19,19 +19,19 @@ env:
 
 jobs:
   publish:
-    runs-on: windows-2022
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v1
 
     - uses: ./.github/actions/build
-
-    - run: dotnet pack --configuration Release -p:Version=$($env:GITHUB_REF -replace '^refs/tags/v','') --output ./publish
+      with:
+        build-params: -p:Version=$($env:GITHUB_REF -replace '^refs/tags/v','') --output ./publish
 
     - run: dotnet nuget push "*.nupkg" -k ${{ secrets.NUGET_KEY }} -s https://api.nuget.org/v3/index.json --skip-duplicate
       working-directory: ./publish
 
-    - run: dotnet nuget push "*.nupkg" -s https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json --skip-duplicate --no-symbols true --api-key ${{ secrets.GITHUB_TOKEN }}
+    - run: dotnet nuget push "*.nupkg" "*.snupkg" -s https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json --skip-duplicate --no-symbols true --api-key ${{ secrets.GITHUB_TOKEN }}
       working-directory: ./publish
 
     - uses: actions/create-release@master

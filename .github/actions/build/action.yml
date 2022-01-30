@@ -1,5 +1,10 @@
 name: 'Build'
 description: 'Sets up the environment and builds the solution'
+inputs:
+  build-params:
+    description: 'Additional build parameters'
+    required: false
+    default: ''
 runs:
   using: composite
   steps:
@@ -14,5 +19,5 @@ runs:
   - run: dotnet restore
     shell: pwsh
 
-  - run: dotnet build --configuration Release --no-restore
+  - run: dotnet build --configuration Release --no-restore ${{ inputs.build-params}}
     shell: pwsh
