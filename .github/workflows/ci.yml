@@ -1,0 +1,29 @@
+name: Continuous Integration
+
+permissions:
+  contents: read
+
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+    branches:
+    - main
+
+defaults:
+  run:
+    shell: pwsh
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: .github/actions/build
+  
+    - run: dotnet test --configuration Release --logger 'console;verbosity=detailed' /p:CollectCoverage=true /p:CoverletOutputFormat=opencover

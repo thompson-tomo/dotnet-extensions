@@ -1,0 +1,22 @@
+name: 'Build'
+description: 'Sets up the environment and builds the solution'
+runs:
+  using: composite
+  steps:
+  - uses: actions/checkout@v1
+    with:
+      fetch-depth: 0
+
+  - uses: actions/setup-dotnet@v1
+    with:
+      dotnet-version: 6.0.x
+
+  - uses: nuget/setup-nuget@v1
+    with:
+      dotnet-version: 6.x
+
+  - run: dotnet restore
+    shell: pwsh
+
+  - run: dotnet build --configuration Release --no-restore
+    shell: pwsh

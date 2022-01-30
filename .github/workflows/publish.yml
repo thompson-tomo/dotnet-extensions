@@ -1,0 +1,38 @@
+name: Publish
+
+permissions:
+  contents: read
+  packages: write
+
+on:
+  push:
+    tags: 
+    - 'v*'
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: .github/actions/build
+
+    - run: dotnet pack --configuration Release -p:Version=$($env:GITHUB_REF -replace '^refs/tags/v','') --output ./publish
+
+    - run: dotnet nuget push "*.nupkg" -k ${{ secrets.NUGET_KEY }} -s https://api.nuget.org/v3/index.json --skip-duplicate
+      working-directory: ./publish
+
+    - run: dotnet nuget push "*.nupkg" -s https://nuget.pkg.github.com/${{ github.repository_owner }} --skip-duplicate --no-symbols true --api-key ${{ secrets.GITHUB_TOKEN }}
+      working-directory: ./publish
+
+    - uses: actions/create-release@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
