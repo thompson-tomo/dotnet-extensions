@@ -6,28 +6,8 @@
     <Description>This package adds support for logging to both Application Insights and Microsoft.Extensions.Logging from a common interface.</Description>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <VersionPrefix Condition=" '$(VersionPrefix)'=='' ">0.0.0</VersionPrefix>
-    <VersionSuffix Condition=" '$(VersionSuffix)'=='' ">dev</VersionSuffix>
-  </PropertyGroup>
-
   <PropertyGroup Condition="'$(Version)' != ''">
     <IsPackable>true</IsPackable>
-    <DebugType>Portable</DebugType>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <VersionPrefix>$(Version)</VersionPrefix>
-    <FileVersion>$(Version)</FileVersion>
-    <AssemblyVersion>$(Version)</AssemblyVersion>
-    <Authors>https://github.com/smokedlinq/dotnet-extensions</Authors>
-    <Company>https://github.com/smokedlinq</Company>
-    <PackageProjectUrl>https://github.com/smokedlinq/dotnet-extensions</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/smokedlinq/dotnet-extensions.git</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <IncludeSymbols>true</IncludeSymbols>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
