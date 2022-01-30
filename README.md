@@ -1,7 +1,7 @@
 # It's dangerous to go alone! Take these...
 
-![Build](https://github.com/smokedlinq/dotnet-extensions/workflows/ci/badge.svg)
-![Publish](https://github.com/smokedlinq/dotnet-extensions/workflows/publish/badge.svg)
+[![Continuous Integration](https://github.com/smokedlinq/dotnet-extensions/actions/workflows/ci.yml/badge.svg)](https://github.com/smokedlinq/dotnet-extensions/actions/workflows/ci.yml)
+[![Publish](https://github.com/smokedlinq/dotnet-extensions/actions/workflows/publish.yml/badge.svg)](https://github.com/smokedlinq/dotnet-extensions/actions/workflows/publish.yml)
 
 ## Extensions.Microsoft.Diagnostics.HealthChecks.ApplicationInsights
 
