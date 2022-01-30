@@ -9,7 +9,7 @@ runs:
 
   - uses: nuget/setup-nuget@v1
     with:
-      dotnet-version: 6.x
+      nuget-version: 6.x
 
   - run: dotnet restore
     shell: pwsh
