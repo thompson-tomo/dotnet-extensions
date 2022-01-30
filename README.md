@@ -8,6 +8,14 @@
 [![NuGet](https://img.shields.io/nuget/dt/Extensions.Microsoft.Diagnostics.HealthChecks.ApplicationInsights.svg)](https://www.nuget.org/packages/Extensions.Microsoft.Diagnostics.HealthChecks.ApplicationInsights)
 [![NuGet](https://img.shields.io/nuget/vpre/Extensions.Microsoft.Diagnostics.HealthChecks.ApplicationInsights.svg)](https://www.nuget.org/packages/Extensions.Microsoft.Diagnostics.HealthChecks.ApplicationInsights)
 
+This package adds an `IHealthCheckPublisher` to `Microsoft.Diagnostics.HealthChecks` that publishes health data as availability telemetry to Application Insights.
+
+```csharp
+services
+    .AddHealthChecks()
+    .AddApplicationInsightsPublisher();
+```
+
 ## Extensions.Microsoft.Logging.ApplicationInsights
 
 [![NuGet](https://img.shields.io/nuget/dt/Extensions.Microsoft.Logging.ApplicationInsights.svg)](https://www.nuget.org/packages/Extensions.Microsoft.Logging.ApplicationInsights)
@@ -15,9 +23,7 @@
 
 This package adds support for logging to both Application Insights and Microsoft.Extensions.Logging from a common interface thus removing the need for a dependency on `ILogger` and `TelemetryClient`.
 
-### Getting started
-
-First, configure dependency injection to include the `ILoggerTelemetry<T>` and `ILoggerTelemetryFactory` interfaces.
+Configure dependency injection to include the `ILoggerTelemetry<T>` and `ILoggerTelemetryFactory` interfaces.
 
 ```csharp
 public void ConfigureServices(IServiceCollection services)
@@ -29,7 +35,7 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 
-Then use one of the following to take a dependency:
+Use one of the following to take a dependency:
 
 ```csharp
 private readonly ILoggerTelemetry logger;
@@ -41,7 +47,7 @@ public MyClass(ILoggerTelemetryFactory loggerFactory)
     => this.logger = loggerFactory.CreateLogger<MyClass>();
 ```
 
-Finally, use the class to log like you would with `ILogger` and also be able to pass availability and event telemetry to the `TelemetryClient`.
+Use the class to log like you would with `ILogger` and also be able to pass availability and event telemetry to the `TelemetryClient`.
 
 ```csharp
 public void ChangeTheThing()
@@ -52,4 +58,43 @@ public void ChangeTheThing()
 }
 ```
 
-> Note: Only requests to the ILoggerTelemetry methods `LogAvailability` and `LogEvent` are directly passed to the TelemetryClient, all other logging is passed to the `ILogger`. The ILogger needs to be configured to use the Application Insights provider to forward other telemetry.
+*Note: Requests to the ILoggerTelemetry methods `LogAvailability` and `LogEvent` are directly passed to the TelemetryClient, all other logging to the `ILogger`.*
+
+## Extensions.Microsoft.Options
+
+[![NuGet](https://img.shields.io/nuget/dt/Extensions.Microsoft.Options.svg)](https://www.nuget.org/packages/Extensions.Microsoft.Options)
+[![NuGet](https://img.shields.io/nuget/vpre/Extensions.Microsoft.Options.svg)](https://www.nuget.org/packages/Extensions.Microsoft.Options)
+
+This package makes it easier using `Microsoft.Extensions.Options` easier.
+
+### Configure options from `IConfiguration` data
+
+```csharp
+services.ConfigureOptionsFromConfiguration<AppOptions>(configuration => configuration.GetSection("App"));
+```
+
+You can also use the `ConfigureOptions` pattern to keep your configuration logic in a separate class.
+
+```csharp
+public class AppOptionsFromConfiguration : ConfigureOptions<AppOptions>.FromConfiguration
+{
+    public AppOptionsFromConfiguration(IConfiguration configuration)
+        : base(configuration.GetSection("App"))
+    { }
+}
+
+services.ConfigureOptions<AppOptionsFromConfiguration>();
+```
+
+### Write less code when using `IServiceProvider` to get options
+
+```csharp
+// serviceProvider.GetRequiredService<IOptions<AppOptions>>().Value;
+serviceProvider.GetOptions<AppOptions>();
+
+// serviceProvider.GetRequiredService<IOptionsSnapshot<AppOptions>>().Get("name");
+serviceProvider.GetOptions<AppOptions>("name");
+
+// serviceProvider.GetRequiredService<IOptionsMonitor<AppOptions>>();
+serviceProvider.GetOptionsMonitor<AppOptions>();
+```
