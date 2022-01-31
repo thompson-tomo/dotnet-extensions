@@ -13,7 +13,7 @@ public static partial class ConfigureOptions<TOptions>
         public FromConfiguration(IConfiguration configuration)
             => _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
 
-        public void Configure(TOptions options)
+        public virtual void Configure(TOptions options)
             => _configuration.Bind(options);
     }
 }
