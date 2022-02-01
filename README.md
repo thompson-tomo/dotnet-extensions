@@ -98,3 +98,52 @@ serviceProvider.GetOptions<AppOptions>("name");
 // serviceProvider.GetRequiredService<IOptionsMonitor<AppOptions>>();
 serviceProvider.GetOptionsMonitor<AppOptions>();
 ```
+
+## Extensions.System.Text.Json
+
+[![NuGet](https://img.shields.io/nuget/dt/Extensions.Microsoft.Options.svg)](https://www.nuget.org/packages/Extensions.Microsoft.Options)
+[![NuGet](https://img.shields.io/nuget/vpre/Extensions.Microsoft.Options.svg)](https://www.nuget.org/packages/Extensions.Microsoft.Options)
+
+This package adds support for `System.Text.Json` converters.
+
+### DateOnlyConverter
+
+Adds support for serializing `DateOnly` to JSON.
+
+```csharp
+var options = new JsonSerializerOptions();
+options.Converters.Add(new DateOnlyConverter("yyyy-MM-dd"));
+```
+
+### TimeOnlyConverter
+
+Adds support for serializing `TimeOnly` to JSON.
+
+```csharp
+var options = new JsonSerializerOptions();
+options.Converters.Add(new TimeOnlyConverter("HH:mm:ss.fff"));
+```
+
+### TimeSpanAsSecondsConverter
+
+Adds support for serializing `TimeSpan` to JSON as seconds.
+
+```csharp
+public record ElapsedTime([property: TimeSpanAsSecondsConverter]TimeSpan Elapsed);
+```
+
+### DateTimeAsUnixTimeSecondsConverter
+
+Adds support for serializing `DateTime` to JSON as seconds since the unix epoch.
+
+```csharp
+public record Document ([property: DateTimeAsUnixTimeSecondsConverter]DateTime Timestamp);
+```
+
+### DateTimeOffsetAsUnixTimeSecondsConverter
+
+Adds support for serializing `DateTimeOffset` to JSON as seconds since the unix epoch.
+
+```csharp
+public record Document ([property: DateTimeOffsetAsUnixTimeSecondsConverter]DateTimeOffset Timestamp);
+```
