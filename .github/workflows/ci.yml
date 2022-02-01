@@ -33,3 +33,14 @@ jobs:
     - uses: ./.github/actions/build
   
     - run: dotnet test --configuration Release --logger 'console;verbosity=detailed' /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+
+    - uses: snyk/actions/dotnet@master
+      continue-on-error: true
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      with:
+        args: --severity-threshold=high --sarif-file-output=snyk.sarif
+
+    - uses: github/codeql-action/upload-sarif@v1
+      with:
+        sarif_file: snyk.sarif
