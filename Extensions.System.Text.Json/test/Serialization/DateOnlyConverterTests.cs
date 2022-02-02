@@ -1,6 +1,5 @@
-using System.Text.Json;
-using System.Text.Json.Nodes;
 using FluentAssertions;
+using System.Text.Json;
 using Xunit;
 
 namespace Extensions.System.Text.Json.Test.Serialization;
@@ -14,7 +13,7 @@ public class DateOnlyConverterTests
         var options = new JsonSerializerOptions();
         options.Converters.Add(new DateOnlyConverter("yyyy-MM-dd"));
         var json = JsonSerializer.Serialize(value, options);
-        
+
         json.Should().Be(@"""2022-01-31""");
     }
 

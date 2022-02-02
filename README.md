@@ -16,6 +16,32 @@ services
     .AddApplicationInsightsPublisher();
 ```
 
+## Extensions.Microsoft.Http
+
+[![NuGet](https://img.shields.io/nuget/dt/Extensions.Microsoft.Http.svg)](https://www.nuget.org/packages/Extensions.Microsoft.Http)
+[![NuGet](https://img.shields.io/nuget/vpre/Extensions.Microsoft.Http.svg)](https://www.nuget.org/packages/Extensions.Microsoft.Http)
+
+This package adds simplifies configuring a typed `HttpClient` using the `IOptions<T>` pattern. It will automatically bind the configuration section with the same name as the client to the options, e.g. `MyClient:BaseAddress` will set the `BaseAddress` property.
+
+```csharp
+services.ConfigureHttpClient<MicrosoftGraphClient, MicrosoftGraphClientOptions>();
+
+public class MicrosoftGraphClient : HttpClient<MicrosoftGraphClient>
+{
+    public MicrosoftGraphClient(HttpClient client)
+        : base(client)
+    {
+    }
+
+    public Task<Me> GetMyAsync()
+        => Client.GetFromJsonAsync<Me>("/v1.0/me"); // <-- System.Net.Http.Json package for HttpClient extensions
+}
+
+public class MicrosoftGraphClientOptions : HttpClientOptions<MicrosoftGraphClient>
+{
+}
+```
+
 ## Extensions.Microsoft.Logging.ApplicationInsights
 
 [![NuGet](https://img.shields.io/nuget/dt/Extensions.Microsoft.Logging.ApplicationInsights.svg)](https://www.nuget.org/packages/Extensions.Microsoft.Logging.ApplicationInsights)
