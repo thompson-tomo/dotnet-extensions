@@ -24,6 +24,7 @@ services
 This package simplifies configuring a typed `HttpClient` using the `IOptions<T>` pattern. It will automatically bind the configuration section with the same name as the client to the options, e.g. `MicrosoftGraphClient:BaseAddress` will set the `BaseAddress` property.
 
 ```csharp
+// Reads from configuration section "MicrosoftGraphClient", e.g. "MicrosoftGraphClient:BaseAddress"
 services.ConfigureHttpClient<MicrosoftGraphClient, MicrosoftGraphClientOptions>();
 
 public class MicrosoftGraphClient : HttpClient<MicrosoftGraphClient>
@@ -49,7 +50,7 @@ You can also explicitly name the typed client which will change the configuratio
 services.ConfigureHttpClient<MicrosoftGraphClient, MicrosoftGraphClientOptions>("NamedClient");
 ```
 
-You can also used this for simple named `HttpClient` instances.
+You can also used this for named `HttpClient` instances created with `IHttpClientFactory`.
 
 ```csharp
 // Reads from configuration section "msgraph", e.g. "msgraph:BaseAddress"
