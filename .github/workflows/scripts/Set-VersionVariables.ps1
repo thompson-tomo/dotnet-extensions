@@ -11,7 +11,8 @@ param
 $Version = $($GITHUB_REF -replace '^refs/tags/v','')
 $IsPrerelease = $Version -like '*-*' ? 'true' : 'false'
 
-Write-Host "Version: '$Version' | IsPrerelease: $IsPrerelease"
+Write-Host "PACKAGE_VERSION: '$Version'"
+Write-Host "IS_PRERELEASE: $IsPrerelease"
 
 Set-EnvironmentVariable PACKAGE_VERSION $Version
 Set-EnvironmentVariable IS_PRERELEASE $IsPrerelease
