@@ -26,15 +26,18 @@ jobs:
 
     - uses: ./.github/actions/build
 
+    - uses: smokedlinq/powershell-devops@v0
+
     - run: |
+        Import-Module powershell-devops
         $Version = $($env:GITHUB_REF -replace '^refs/tags/v','')
         $IsPrerelease = $Version -like '*-*'
         Write-Host "Version: '$Version' | IsPrerelease: $IsPrerelease"
-        "::set-output name=PACKAGE_VERSION::$Version"
-        "::set-output name=IS_PRERELEASE::$IsPrerelease"
+        Set-EnvironmentVariable PACKAGE_VERSION $Version
+        Set-EnvironmentVariable IS_PRERELEASE $IsPrerelease
       shell: pwsh
       
-    - run: dotnet pack --configuration Release -p:Version=${{ env.PACKAGE_VERSION }} --output ./publish
+    - run: dotnet pack --configuration Release -p:Version=$(PACKAGE_VERSION) --output ./publish
 
     - run: dotnet nuget push "*.nupkg" -k ${{ secrets.NUGET_KEY }} -s https://api.nuget.org/v3/index.json --skip-duplicate
       working-directory: ./publish
