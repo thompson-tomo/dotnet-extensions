@@ -27,6 +27,7 @@ jobs:
     - uses: ./.github/actions/build
       
     - run: dotnet pack --configuration Release -p:Version=$($env:GITHUB_REF -replace '^refs/tags/v','') --output ./publish
+      shell: pwsh
 
     - run: dotnet nuget push "*.nupkg" -k ${{ secrets.NUGET_KEY }} -s https://api.nuget.org/v3/index.json --skip-duplicate
       working-directory: ./publish
