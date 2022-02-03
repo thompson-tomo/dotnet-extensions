@@ -5,7 +5,7 @@
 param
 (
     [ValidateNotNullOrEmpty()]
-    [string] $GITHUB_REF = $(Get-EnvironmentVariable GITHUB_REF -Required)
+    [string] $GITHUB_REF = $(Get-EnvironmentVariable GITHUB_REF -Require)
 )
 
 $Version = $($GITHUB_REF -replace '^refs/tags/v','')
