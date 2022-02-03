@@ -2,19 +2,22 @@
 
 namespace Extensions.Microsoft.Http;
 
-internal class HttpClientOptionsValidator<TClient, TOptions> : AbstractValidator<TOptions>
-    where TOptions : HttpClientOptions<TClient>
-    where TClient : HttpClient<TClient>
+internal class HttpClientOptionsValidator<TOptions> : AbstractValidator<TOptions>
+    where TOptions : HttpClientOptions
 {
-    public HttpClientOptionsValidator(string sectionName)
+    public HttpClientOptionsValidator(string? name)
     {
         RuleFor(x => x.BaseAddress)
             .Must(x => Uri.TryCreate(x, UriKind.Absolute, out _) == true)
-                .WithMessage($"{sectionName}:{nameof(HttpClientOptions<TClient>.BaseAddress)} must be a valid URI.")
+                .WithMessage(name is null
+                    ? $"{nameof(HttpClientOptions.BaseAddress)} must be a valid URI."
+                    : $"{name}:{nameof(HttpClientOptions.BaseAddress)} must be a valid URI.")
                 .Unless(x => string.IsNullOrEmpty(x.BaseAddress));
 
         RuleFor(x => x.MaxResponseContentBufferSize)
             .GreaterThan(0)
-                .WithMessage($"{sectionName}:{nameof(HttpClientOptions<TClient>.MaxResponseContentBufferSize)} must be greater than zero.");
+                .WithMessage(name is null
+                    ? $"{nameof(HttpClientOptions.MaxResponseContentBufferSize)} must be greater than zero."
+                    : $"{name}:{nameof(HttpClientOptions.MaxResponseContentBufferSize)} must be greater than zero.");
     }
 }

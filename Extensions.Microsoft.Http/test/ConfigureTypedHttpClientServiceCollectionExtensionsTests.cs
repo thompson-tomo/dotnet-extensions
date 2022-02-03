@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Extensions.Microsoft.Http.Tests;
 
-public class ConfigureHttpClientServiceCollectionExtensionsTests
+public class ConfigureTypedHttpClientServiceCollectionExtensionsTests
 {
     [Fact]
     public void ConfigureHttpClient()
@@ -73,7 +73,7 @@ public class ConfigureHttpClientServiceCollectionExtensionsTests
         }
     }
 
-    private class TestClientOptions : HttpClientOptions<TestClient>
+    private class TestClientOptions : HttpClientOptions
     {
     }
 }

@@ -3,30 +3,27 @@ using Microsoft.Extensions.Options;
 
 namespace Extensions.Microsoft.Http;
 
-internal class ConfigureHttpClient<TClient, TOptions>
+internal class ConfigureHttpClient<TOptions>
     : IConfigureOptions<TOptions>,
+      IConfigureNamedOptions<TOptions>,
       IValidateOptions<TOptions>
-    where TOptions : HttpClientOptions<TClient>
-    where TClient : HttpClient<TClient>
+    where TOptions : HttpClientOptions
 {
-    private static readonly string SectionName = typeof(TClient).Name;
-    private static readonly HttpClientOptionsValidator<TClient, TOptions> Validator = new(SectionName);
-
     private readonly IConfiguration _configuration;
 
     public ConfigureHttpClient(IConfiguration configuration)
-    {
-        _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
-    }
+        => _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
 
     public void Configure(TOptions options)
-    {
-        _configuration.GetSection(SectionName).Bind(options);
-    }
+        => Configure(Options.DefaultName, options);
+
+    public void Configure(string name, TOptions options)
+        => _configuration.GetSection(name).Bind(options);
 
     public ValidateOptionsResult Validate(string name, TOptions options)
     {
-        var result = Validator.Validate(options);
+        var validator = new HttpClientOptionsValidator<TOptions>(name);
+        var result = validator.Validate(options);
 
         if (result.IsValid)
         {

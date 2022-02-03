@@ -21,7 +21,7 @@ services
 [![NuGet](https://img.shields.io/nuget/dt/Extensions.Microsoft.Http.svg)](https://www.nuget.org/packages/Extensions.Microsoft.Http)
 [![NuGet](https://img.shields.io/nuget/vpre/Extensions.Microsoft.Http.svg)](https://www.nuget.org/packages/Extensions.Microsoft.Http)
 
-This package adds simplifies configuring a typed `HttpClient` using the `IOptions<T>` pattern. It will automatically bind the configuration section with the same name as the client to the options, e.g. `MyClient:BaseAddress` will set the `BaseAddress` property.
+This package simplifies configuring a typed `HttpClient` using the `IOptions<T>` pattern. It will automatically bind the configuration section with the same name as the client to the options, e.g. `MicrosoftGraphClient:BaseAddress` will set the `BaseAddress` property.
 
 ```csharp
 services.ConfigureHttpClient<MicrosoftGraphClient, MicrosoftGraphClientOptions>();
@@ -39,6 +39,28 @@ public class MicrosoftGraphClient : HttpClient<MicrosoftGraphClient>
 
 public class MicrosoftGraphClientOptions : HttpClientOptions<MicrosoftGraphClient>
 {
+}
+```
+
+You can also explicitly name the typed client which will change the configuration section name.
+
+```csharp
+// Reads from configuration section "NamedClient", e.g. "NamedClient:BaseAddress"
+services.ConfigureHttpClient<MicrosoftGraphClient, MicrosoftGraphClientOptions>("NamedClient");
+```
+
+You can also used this for simple named `HttpClient` instances.
+
+```csharp
+// Reads from configuration section "msgraph", e.g. "msgraph:BaseAddress"
+services.ConfigureHttpClient<MicrosoftGraphClientOptions>("msgraph");
+
+public class MicrosoftGraphClient
+{
+    private readonly HttpClient _client;
+
+    public MicrosoftGraphClient(IHttpClientFactory factory)
+        => _client = factory.CreateClient("msgraph");
 }
 ```
 
