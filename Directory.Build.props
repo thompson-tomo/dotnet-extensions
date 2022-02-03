@@ -26,5 +26,6 @@
       <PublishRepositoryUrl>true</PublishRepositoryUrl>
       <SymbolPackageFormat>snupkg</SymbolPackageFormat>
       <PackageLicenseExpression>MIT</PackageLicenseExpression>
+      <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     </PropertyGroup>
 </Project>
