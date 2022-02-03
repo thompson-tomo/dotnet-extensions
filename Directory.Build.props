@@ -24,7 +24,6 @@
       <RepositoryType>git</RepositoryType>
       <IncludeSymbols>true</IncludeSymbols>
       <PublishRepositoryUrl>true</PublishRepositoryUrl>
-      <IncludeSymbols>true</IncludeSymbols>
       <SymbolPackageFormat>snupkg</SymbolPackageFormat>
       <PackageLicenseExpression>MIT</PackageLicenseExpression>
     </PropertyGroup>
