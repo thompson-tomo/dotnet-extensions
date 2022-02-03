@@ -28,13 +28,7 @@ jobs:
 
     - uses: smokedlinq/powershell-devops@v0
 
-    - run: |
-        Import-Module powershell-devops
-        $Version = $($env:GITHUB_REF -replace '^refs/tags/v','')
-        $IsPrerelease = $Version -like '*-*'
-        Write-Host "Version: '$Version' | IsPrerelease: $IsPrerelease"
-        Set-EnvironmentVariable PACKAGE_VERSION $Version
-        Set-EnvironmentVariable IS_PRERELEASE $IsPrerelease
+    - run: ./.github/workflows/scripts/Set-VersionVariables.ps1
       shell: pwsh
       
     - run: dotnet pack --configuration Release -p:Version=$(PACKAGE_VERSION) --output ./publish
