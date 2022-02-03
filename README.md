@@ -114,25 +114,24 @@ public void ChangeTheThing()
 [![NuGet](https://img.shields.io/nuget/dt/Extensions.Microsoft.Options.svg)](https://www.nuget.org/packages/Extensions.Microsoft.Options)
 [![NuGet](https://img.shields.io/nuget/vpre/Extensions.Microsoft.Options.svg)](https://www.nuget.org/packages/Extensions.Microsoft.Options)
 
-This package makes it easier using `Microsoft.Extensions.Options` easier.
+Makes it easier when using `Microsoft.Extensions.Options`.
 
-### Configure options from `IConfiguration` data
+### Configuring `IOptions<T>` from `IConfiguration` 
 
-```csharp
-services.ConfigureOptionsFromConfiguration<AppOptions>(configuration => configuration.GetSection("App"));
-```
-
-You can also use the `ConfigureOptions` pattern to keep your configuration logic in a separate class.
+This builds on top of the `Microsoft.Extensions.Options.ConfigurationExtensions` package.
 
 ```csharp
-public class AppOptionsFromConfiguration : ConfigureOptions<AppOptions>.FromConfiguration
-{
-    public AppOptionsFromConfiguration(IConfiguration configuration)
-        : base(configuration.GetSection("App"))
-    { }
-}
+// Binds root IConfiguration to AppOptions
+services.ConfigureOptionsFromConfiguration<AppOptions>();
 
-services.ConfigureOptions<AppOptionsFromConfiguration>();
+// Binds configuration section "name" to the named AppOptions "name"
+services.ConfigureOptionsFromConfiguration<AppOptions>("name");
+
+// Binds configuration section "AppOptions" to AppOptions
+services.ConfigureOptionsFromConfiguration<AppOptions>(c => c.GetSection(nameof(AppOptions)));
+
+// Binds configuration section "AppOptions:name" to named AppOptions "name"
+services.ConfigureOptionsFromConfiguration<AppOptions>("name", c => c.GetSection(nameof(AppOptions)));
 ```
 
 ### Write less code when using `IServiceProvider` to get options
@@ -153,7 +152,7 @@ serviceProvider.GetOptionsMonitor<AppOptions>();
 [![NuGet](https://img.shields.io/nuget/dt/Extensions.Microsoft.Options.svg)](https://www.nuget.org/packages/Extensions.Microsoft.Options)
 [![NuGet](https://img.shields.io/nuget/vpre/Extensions.Microsoft.Options.svg)](https://www.nuget.org/packages/Extensions.Microsoft.Options)
 
-This package adds support for `System.Text.Json` converters.
+Adds missing `System.Text.Json` converters.
 
 ### DateOnlyConverter
 

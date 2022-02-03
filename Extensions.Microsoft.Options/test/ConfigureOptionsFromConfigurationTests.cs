@@ -19,6 +19,28 @@ public class ConfigureOptionsFromConfigurationTests
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string>()
             {
+                [nameof(ServiceOptions.Name)] = "Service Options"
+            })
+            .Build();
+
+        var services = new ServiceCollection()
+            .AddSingleton<IConfiguration>(configuration);
+
+        services.ConfigureOptionsFromConfiguration<ServiceOptions>();
+
+        using var serviceProvider = services.BuildServiceProvider();
+
+        var options = serviceProvider.GetRequiredService<IOptions<ServiceOptions>>();
+
+        options.Value.Name.Should().Be("Service Options");
+    }
+
+    [Fact]
+    public void ConfigureOptionsFromConfigurationSection()
+    {
+        var configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string>()
+            {
                 [$"{nameof(ServiceOptions)}:{nameof(ServiceOptions.Name)}"] = "Service Options"
             })
             .Build();
@@ -36,31 +58,24 @@ public class ConfigureOptionsFromConfigurationTests
     }
 
     [Fact]
-    public void ConfigureOptionsFromInheritedFromConfiguration()
+    public void ConfigureNamedOptionsFromConfiguration()
     {
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string>()
             {
-                [$"{nameof(ServiceOptions)}:{nameof(ServiceOptions.Name)}"] = "Service Options"
+                [$"name:{nameof(ServiceOptions.Name)}"] = "Service Options"
             })
             .Build();
 
         var services = new ServiceCollection()
             .AddSingleton<IConfiguration>(configuration);
 
-        services.ConfigureOptions<ServiceOptionsFromConfiguration>();
+        services.ConfigureOptionsFromConfiguration<ServiceOptions>("name");
 
         using var serviceProvider = services.BuildServiceProvider();
 
-        var options = serviceProvider.GetRequiredService<IOptions<ServiceOptions>>();
+        var options = serviceProvider.GetRequiredService<IOptionsSnapshot<ServiceOptions>>().Get("name");
 
-        options.Value.Name.Should().Be("Service Options");
-    }
-
-    private class ServiceOptionsFromConfiguration : ConfigureOptions<ServiceOptions>.FromConfiguration
-    {
-        public ServiceOptionsFromConfiguration(IConfiguration configuration)
-            : base(configuration.GetSection(nameof(ServiceOptions)))
-        { }
+        options.Name.Should().Be("Service Options");
     }
 }

@@ -1,4 +1,4 @@
-﻿using Extensions.Microsoft.Http;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 
 namespace Microsoft.Extensions.DependencyInjection;
@@ -9,9 +9,12 @@ public static class ConfigureHttpClientServiceCollectionExtensions
         where TClient : HttpClient<TClient>
         where TOptions : HttpClientOptions
     {
-        services.ConfigureOptions<ConfigureHttpClient<TOptions>>();
+        var clientName = typeof(TClient).Name;
 
-        var builder = services.AddHttpClient<TClient>((serviceProvider, client) => ConfigureHttpClient<TOptions>(serviceProvider, client, typeof(TClient).Name));
+        services.ConfigureOptionsFromConfiguration<TOptions>(clientName);
+
+        var builder = services.AddHttpClient<TClient>((serviceProvider, client) =>
+            ConfigureHttpClient<TOptions>(serviceProvider, client, clientName));
 
         return builder;
     }
@@ -20,9 +23,10 @@ public static class ConfigureHttpClientServiceCollectionExtensions
         where TClient : HttpClient<TClient>
         where TOptions : HttpClientOptions
     {
-        services.ConfigureOptions<ConfigureHttpClient<TOptions>>();
+        services.ConfigureOptionsFromConfiguration<TOptions>(name);
 
-        var builder = services.AddHttpClient<TClient>(name, (serviceProvider, client) => ConfigureHttpClient<TOptions>(serviceProvider, client, name));
+        var builder = services.AddHttpClient<TClient>(name, (serviceProvider, client) => 
+            ConfigureHttpClient<TOptions>(serviceProvider, client, name));
 
         return builder;
     }
@@ -30,9 +34,10 @@ public static class ConfigureHttpClientServiceCollectionExtensions
     public static IHttpClientBuilder ConfigureHttpClient<TOptions>(this IServiceCollection services, string name)
         where TOptions : HttpClientOptions
     {
-        services.ConfigureOptions<ConfigureHttpClient<TOptions>>();
+        services.ConfigureOptionsFromConfiguration<TOptions>(name);
 
-        var builder = services.AddHttpClient(name, (serviceProvider, client) => ConfigureHttpClient<TOptions>(serviceProvider, client, name));
+        var builder = services.AddHttpClient(name, (serviceProvider, client) => 
+            ConfigureHttpClient<TOptions>(serviceProvider, client, name));
 
         return builder;
     }
