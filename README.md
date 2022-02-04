@@ -38,7 +38,7 @@ public class MicrosoftGraphClient : HttpClient<MicrosoftGraphClient>
         => Client.GetFromJsonAsync<Me>("/v1.0/me"); // <-- System.Net.Http.Json package for HttpClient extensions
 }
 
-public class MicrosoftGraphClientOptions : HttpClientOptions<MicrosoftGraphClient>
+public class MicrosoftGraphClientOptions : HttpClientOptions
 {
 }
 ```
