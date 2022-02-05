@@ -1,4 +1,5 @@
 using FluentAssertions;
+using System.Globalization;
 using System.Text.Json;
 using Xunit;
 
@@ -9,7 +10,7 @@ public class DateTimeAsUnixTimeSecondsConverterTests
     [Fact]
     public void Serialize()
     {
-        var value = new ObjectUsingDateTimeAsUnixTimeSecondsConverter { Timestamp = DateTime.Parse("2021-01-31T19:50:00Z") };
+        var value = new ObjectUsingDateTimeAsUnixTimeSecondsConverter { Timestamp = DateTime.Parse("2021-01-31T19:50:00Z", CultureInfo.InvariantCulture) };
         var json = JsonSerializer.Serialize(value);
         json.Should().Be(@"{""Timestamp"":1612122600}");
     }
