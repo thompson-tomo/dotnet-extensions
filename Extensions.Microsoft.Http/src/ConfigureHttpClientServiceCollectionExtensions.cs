@@ -19,13 +19,41 @@ public static class ConfigureHttpClientServiceCollectionExtensions
         return builder;
     }
 
+    public static IHttpClientBuilder ConfigureHttpClient<TClient, TImplementation, TOptions>(this IServiceCollection services)
+        where TClient : class
+        where TImplementation : class, TClient
+        where TOptions : HttpClientOptions
+    {
+        var clientName = typeof(TClient).Name;
+
+        services.ConfigureOptionsFromConfiguration<TOptions>(clientName);
+
+        var builder = services.AddHttpClient<TClient, TImplementation>((serviceProvider, client)
+            => ConfigureHttpClient<TOptions>(serviceProvider, client, clientName));
+
+        return builder;
+    }
+
+    public static IHttpClientBuilder ConfigureHttpClient<TClient, TImplementation, TOptions>(this IServiceCollection services, string name)
+        where TClient : class
+        where TImplementation : class, TClient
+        where TOptions : HttpClientOptions
+    {
+        services.ConfigureOptionsFromConfiguration<TOptions>(name);
+
+        var builder = services.AddHttpClient<TClient, TImplementation>(name, (serviceProvider, client) => 
+            ConfigureHttpClient<TOptions>(serviceProvider, client, name));
+
+        return builder;
+    }
+
     public static IHttpClientBuilder ConfigureHttpClient<TClient, TOptions>(this IServiceCollection services, string name)
         where TClient : class
         where TOptions : HttpClientOptions
     {
         services.ConfigureOptionsFromConfiguration<TOptions>(name);
 
-        var builder = services.AddHttpClient<TClient>(name, (serviceProvider, client) => 
+        var builder = services.AddHttpClient<TClient>(name, (serviceProvider, client) =>
             ConfigureHttpClient<TOptions>(serviceProvider, client, name));
 
         return builder;
