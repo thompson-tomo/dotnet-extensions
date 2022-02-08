@@ -1,6 +1,7 @@
-using FluentAssertions;
 using System.Globalization;
 using System.Text.Json;
+using System.Text.Json.Serialization;
+using FluentAssertions;
 using Xunit;
 
 namespace Extensions.System.Text.Json.Test.Serialization;

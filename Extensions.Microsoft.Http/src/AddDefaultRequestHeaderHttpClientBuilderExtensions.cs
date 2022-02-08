@@ -1,11 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-
-namespace Extensions.Microsoft.Http;
+namespace Microsoft.Extensions.DependencyInjection;
 
 public static class AddDefaultRequestHeaderHttpClientBuilderExtensions
 {

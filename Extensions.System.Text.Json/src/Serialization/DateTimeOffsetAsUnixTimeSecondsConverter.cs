@@ -1,6 +1,4 @@
-using System.Text.Json.Serialization;
-
-namespace System.Text.Json;
+namespace System.Text.Json.Serialization;
 
 [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
 public class DateTimeOffsetAsUnixTimeSecondsConverterAttribute : JsonConverterAttribute

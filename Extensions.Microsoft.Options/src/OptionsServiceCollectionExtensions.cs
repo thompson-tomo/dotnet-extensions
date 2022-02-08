@@ -1,8 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 
-namespace Microsoft.Extensions.Options;
+namespace Microsoft.Extensions.DependencyInjection;
 
 public static class OptionsServiceCollectionExtensions
 {

@@ -1,7 +1,7 @@
-﻿using Microsoft.ApplicationInsights;
-using Microsoft.Extensions.Options;
-using System.Collections;
+﻿using System.Collections;
 using System.Text.Json;
+using Microsoft.ApplicationInsights;
+using Microsoft.Extensions.Options;
 
 namespace Microsoft.Extensions.Diagnostics.HealthChecks.ApplicationInsights;
 
