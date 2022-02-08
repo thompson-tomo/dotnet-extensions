@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 
 namespace Microsoft.Extensions.DependencyInjection;
@@ -6,7 +6,7 @@ namespace Microsoft.Extensions.DependencyInjection;
 public static class ConfigureHttpClientServiceCollectionExtensions
 {
     public static IHttpClientBuilder ConfigureHttpClient<TClient, TOptions>(this IServiceCollection services)
-        where TClient : HttpClient<TClient>
+        where TClient : class
         where TOptions : HttpClientOptions
     {
         var clientName = typeof(TClient).Name;
@@ -20,7 +20,7 @@ public static class ConfigureHttpClientServiceCollectionExtensions
     }
 
     public static IHttpClientBuilder ConfigureHttpClient<TClient, TOptions>(this IServiceCollection services, string name)
-        where TClient : HttpClient<TClient>
+        where TClient : class
         where TOptions : HttpClientOptions
     {
         services.ConfigureOptionsFromConfiguration<TOptions>(name);

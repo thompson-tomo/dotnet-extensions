@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
@@ -65,12 +65,11 @@ public class ConfigureTypedHttpClientServiceCollectionExtensionsTests
         client.Client.Timeout.TotalSeconds.Should().Be(30);
     }
 
-    private class TestClient : HttpClient<TestClient>
+    private class TestClient
     {
+        public HttpClient Client { get; set; }
         public TestClient(HttpClient client)
-            : base(client)
-        {
-        }
+            => Client = client;
     }
 
     private class TestClientOptions : HttpClientOptions
