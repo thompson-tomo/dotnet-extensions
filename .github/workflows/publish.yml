@@ -35,9 +35,11 @@ jobs:
 
     - run: dotnet nuget push "*.nupkg" -k ${{ secrets.NUGET_KEY }} -s https://api.nuget.org/v3/index.json --skip-duplicate
       working-directory: ./publish
+      continue-on-error: true
 
-    - run: dotnet nuget push "*.nupkg" -s https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json --skip-duplicate --no-symbols true --api-key ${{ secrets.GITHUB_TOKEN }}
+    - run: dotnet nuget push "*.nupkg" -k ${{ secrets.GITHUB_TOKEN }} -s "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" --skip-duplicate
       working-directory: ./publish
+      continue-on-error: true
 
     - uses: actions/create-release@master
       continue-on-error: true
