@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -227,6 +227,9 @@ public static class HealthReportSerializer
 
             writer.WritePropertyName(ConvertName(nameof(value.TotalDuration)));
             JsonSerializer.Serialize(writer, value.TotalDuration, options);
+
+            writer.WritePropertyName(ConvertName("Timestamp"));
+            JsonSerializer.Serialize(writer, DateTimeOffset.Now, options);
 
             writer.WritePropertyName(ConvertName(nameof(value.Entries)));
             JsonSerializer.Serialize(writer, value.Entries, options);
