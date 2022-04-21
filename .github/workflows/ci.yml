@@ -29,10 +29,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - uses: ./.github/actions/build
-  
+
     - run: dotnet test --configuration Release --logger 'console;verbosity=detailed' /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
 
     - uses: snyk/actions/dotnet@master
