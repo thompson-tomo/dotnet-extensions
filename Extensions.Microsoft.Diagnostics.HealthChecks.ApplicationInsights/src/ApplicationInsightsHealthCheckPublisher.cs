@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Text.Json;
 using Microsoft.ApplicationInsights;
 using Microsoft.Extensions.Options;
@@ -61,7 +61,12 @@ public class ApplicationInsightsHealthCheckPublisher : IHealthCheckPublisher
                 }
                 else if (data.Value is HealthReport entryReport)
                 {
-                    properties.Add(data.Key, HealthReportSerializer.Serialize(entryReport));
+                    properties.Add(data.Key, entryReport.Status.ToString());
+
+                    foreach (var dataEntry in entryReport.Entries)
+                    {
+                        properties.Add($"{data.Key}:{dataEntry.Key}", dataEntry.Value.Status.ToString());
+                    }
                 }
                 else if (data.Value is IEnumerable enumerable)
                 {
