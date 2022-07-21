@@ -68,6 +68,10 @@ public class ApplicationInsightsHealthCheckPublisher : IHealthCheckPublisher
                         properties.Add($"{data.Key}:{dataEntry.Key}", dataEntry.Value.Status.ToString());
                     }
                 }
+                else if (data.Value is string value)
+                {
+                    properties.Add(data.Key, value);
+                }
                 else if (data.Value is IEnumerable enumerable)
                 {
                     properties.Add(data.Key, JsonSerializer.Serialize(enumerable));
