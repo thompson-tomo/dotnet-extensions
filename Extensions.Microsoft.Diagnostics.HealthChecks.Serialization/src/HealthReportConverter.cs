@@ -15,6 +15,7 @@ public class HealthReportConverter : JsonConverter<HealthReport>
         var healthReportOptions = HealthReportJsonSerializerOptionsFactory.Create(options);
         Dictionary<string, HealthReportEntry>? entries = null;
         var totalDuration = TimeSpan.Zero;
+        HealthStatus? status = null;
 
         while (reader.Read() && reader.TokenType != JsonTokenType.EndObject)
         {
@@ -25,6 +26,11 @@ public class HealthReportConverter : JsonConverter<HealthReport>
 
                 switch (healthReportOptions.PropertyNameCaseInsensitive ? propertyName : propertyName?.ToLowerInvariant())
                 {
+                    case "Status":
+                    case "status":
+                        status = JsonSerializer.Deserialize<HealthStatus>(ref reader, healthReportOptions);
+                        break;
+
                     case "TotalDuration":
                     case "totalDuration":
                     case "totalduration":
@@ -39,7 +45,11 @@ public class HealthReportConverter : JsonConverter<HealthReport>
             }
         }
 
-        return new HealthReport(entries ?? new(), totalDuration);
+        var report = status is null
+            ? new HealthReport(entries ?? new(), totalDuration)
+            : new HealthReport(entries ?? new(), status.Value, totalDuration);
+
+        return report;
     }
 
     public override void Write(Utf8JsonWriter writer, HealthReport value, JsonSerializerOptions options)
