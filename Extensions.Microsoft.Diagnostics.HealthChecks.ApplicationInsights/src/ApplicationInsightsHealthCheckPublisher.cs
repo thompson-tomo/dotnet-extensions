@@ -87,6 +87,11 @@ public class ApplicationInsightsHealthCheckPublisher : IHealthCheckPublisher
 
         if (entry.Value.Exception is not null)
         {
+            properties.TryAdd("ExceptionId", Guid.NewGuid().ToString());
+            properties.TryAdd("ExceptionType", entry.Value.Exception.GetType().FullName!);
+            properties.TryAdd("ExceptionMessage", entry.Value.Exception.Message);
+            properties.TryAdd("ExceptionStackTrace", entry.Value.Exception.StackTrace!.ToString());
+
             client.TrackException(entry.Value.Exception, properties, metrics);
         }
 
