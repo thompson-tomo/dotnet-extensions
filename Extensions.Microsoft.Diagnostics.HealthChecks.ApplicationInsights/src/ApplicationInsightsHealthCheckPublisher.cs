@@ -47,54 +47,91 @@ public class ApplicationInsightsHealthCheckPublisher : IHealthCheckPublisher
         var properties = new Dictionary<string, string>
         {
             [nameof(ApplicationInsightsHealthCheckPublisherOptions.EnvironmentName)] = options.EnvironmentName,
+            [$"{nameof(HealthReportEntry)}{nameof(HealthReportEntry.Status)}"] = entry.Value.Status.ToString(),
         };
+
+        if (!string.IsNullOrEmpty(entry.Value.Description))
+        {
+            properties.Add($"{nameof(HealthReportEntry)}{nameof(HealthReportEntry.Description)}", entry.Value.Description);
+        }
+
+        if (entry.Value.Tags.Any())
+        {
+            MapTagsAsProperties(entry, properties);
+        }
 
         var metrics = new Dictionary<string, double>();
 
         if (entry.Value.Data is not null)
         {
-            foreach (var data in entry.Value.Data)
-            {
-                if (data.Value is double metric)
-                {
-                    metrics.Add(data.Key, metric);
-                }
-                else if (data.Value is HealthReport entryReport)
-                {
-                    properties.Add(data.Key, entryReport.Status.ToString());
-
-                    foreach (var dataEntry in entryReport.Entries)
-                    {
-                        properties.Add($"{data.Key}:{dataEntry.Key}", dataEntry.Value.Status.ToString());
-                    }
-                }
-                else if (data.Value is string value)
-                {
-                    properties.Add(data.Key, value);
-                }
-                else if (data.Value is IEnumerable enumerable)
-                {
-                    properties.Add(data.Key, JsonSerializer.Serialize(enumerable));
-                }
-                else
-                {
-                    properties.Add(data.Key, data.Value?.ToString() ?? string.Empty);
-                }
-            }
+            MapData(entry.Value, properties, metrics);
         }
 
-        metrics.Add($"{nameof(HealthReportEntry)}{nameof(HealthReportEntry.Duration)}", entry.Value.Duration.TotalMilliseconds);
+        MapMetrics(entry.Value, metrics);
 
         if (entry.Value.Exception is not null)
         {
-            properties.TryAdd("ExceptionId", Guid.NewGuid().ToString());
-            properties.TryAdd("ExceptionType", entry.Value.Exception.GetType().FullName!);
-            properties.TryAdd("ExceptionMessage", entry.Value.Exception.Message);
-            properties.TryAdd("ExceptionStackTrace", entry.Value.Exception.StackTrace!.ToString());
-
-            client.TrackException(entry.Value.Exception, properties, metrics);
+            TrackException(entry.Value.Exception, properties, metrics);
         }
 
         client.TrackAvailability($"{options.ApplicationName}:{entry.Key}", DateTimeOffset.Now, entry.Value.Duration, options.RunLocation, entry.Value.Status == HealthStatus.Healthy, entry.Value.Description, properties, metrics);
+    }
+
+    private static void MapTagsAsProperties(KeyValuePair<string, HealthReportEntry> entry, Dictionary<string, string> properties)
+    {
+        var tags = JsonSerializer.Serialize(entry.Value.Tags);
+        properties.Add($"{nameof(HealthReportEntry)}{nameof(HealthReportEntry.Tags)}", tags);
+    }
+
+    private void TrackException(Exception exception, Dictionary<string, string> properties, Dictionary<string, double> metrics)
+    {
+        properties.TryAdd("ExceptionId", Guid.NewGuid().ToString());
+        properties.TryAdd("ExceptionType", exception.GetType().FullName!);
+        properties.TryAdd("ExceptionMessage", exception.Message);
+        properties.TryAdd("ExceptionStackTrace", exception.StackTrace!.ToString());
+
+        client.TrackException(exception, properties, metrics);
+    }
+
+    private static void MapMetrics(HealthReportEntry entry, Dictionary<string, double> metrics)
+    {
+        metrics.Add($"{nameof(HealthReportEntry)}{nameof(HealthReportEntry.Duration)}", entry.Duration.TotalMilliseconds);
+    }
+
+    private static void MapData(HealthReportEntry entry, Dictionary<string, string> properties, Dictionary<string, double> metrics)
+    {
+        foreach (var data in entry.Data)
+        {
+            if (data.Value is double metric)
+            {
+                metrics.Add(data.Key, metric);
+            }
+            else if (data.Value is HealthReport entryReport)
+            {
+                MapHealthReportAsProperty(properties, data, entryReport);
+            }
+            else if (data.Value is string value)
+            {
+                properties.Add(data.Key, value);
+            }
+            else if (data.Value is IEnumerable enumerable)
+            {
+                properties.Add(data.Key, JsonSerializer.Serialize(enumerable));
+            }
+            else
+            {
+                properties.Add(data.Key, data.Value?.ToString() ?? string.Empty);
+            }
+        }
+    }
+
+    private static void MapHealthReportAsProperty(Dictionary<string, string> properties, KeyValuePair<string, object> data, HealthReport entryReport)
+    {
+        properties.Add(data.Key, entryReport.Status.ToString());
+
+        foreach (var dataEntry in entryReport.Entries)
+        {
+            properties.Add($"{data.Key}:{dataEntry.Key}", dataEntry.Value.Status.ToString());
+        }
     }
 }
