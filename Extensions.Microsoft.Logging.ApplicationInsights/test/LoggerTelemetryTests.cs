@@ -1,5 +1,6 @@
-﻿using AutoFixture;
+using AutoFixture;
 using AutoFixture.AutoNSubstitute;
+using FluentAssertions;
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
@@ -16,7 +17,9 @@ public class LoggerTelemetryTests
 
         var sut = new LoggerTelemetry(logger, TelemetryClientFixture.Create());
 
-        sut.LogEvent(nameof(CanUseLogEvent));
+        var result = sut.Invoking(_ => sut.LogEvent(nameof(CanUseLogEvent)));
+
+        result.Should().NotThrow();
     }
 
     [Fact]
@@ -30,7 +33,9 @@ public class LoggerTelemetryTests
             .Customize(new AutoNSubstituteCustomization())
             .Create<AvailabilityTelemetry>();
 
-        sut.LogAvailability(telemetry);
+        var result = sut.Invoking(_ => sut.LogAvailability(telemetry));
+
+        result.Should().NotThrow();
     }
 
     [Fact]

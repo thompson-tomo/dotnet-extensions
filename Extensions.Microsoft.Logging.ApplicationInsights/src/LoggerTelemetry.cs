@@ -1,4 +1,4 @@
-﻿using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.Extensions.Logging;
 
@@ -15,7 +15,8 @@ internal class LoggerTelemetry : ILoggerTelemetry
         this.client = client ?? throw new ArgumentNullException(nameof(client));
     }
 
-    public IDisposable BeginScope<TState>(TState state)
+    public IDisposable? BeginScope<TState>(TState state)
+        where TState : notnull
         => logger.BeginScope(state);
 
     public bool IsEnabled(LogLevel logLevel)

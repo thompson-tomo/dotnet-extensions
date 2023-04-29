@@ -29,7 +29,7 @@ public class ConfigureNamedTypedHttpClientServiceCollectionExtensionsTests
         var services = new ServiceCollection();
 
         services.AddSingleton<IConfiguration>(new ConfigurationBuilder()
-            .AddInMemoryCollection(new Dictionary<string, string>
+            .AddInMemoryCollection(new Dictionary<string, string?>
             {
                 ["name:BaseAddress"] = "http://localhost"
             })
@@ -50,7 +50,7 @@ public class ConfigureNamedTypedHttpClientServiceCollectionExtensionsTests
         var services = new ServiceCollection();
 
         services.AddSingleton<IConfiguration>(new ConfigurationBuilder()
-            .AddInMemoryCollection(new Dictionary<string, string>
+            .AddInMemoryCollection(new Dictionary<string, string?>
             {
                 ["name:Timeout"] = "00:00:30"
             })

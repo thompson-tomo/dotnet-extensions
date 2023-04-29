@@ -17,7 +17,7 @@ public class ConfigureOptionsFromConfigurationTests
     public void ConfigureOptionsFromConfiguration()
     {
         var configuration = new ConfigurationBuilder()
-            .AddInMemoryCollection(new Dictionary<string, string>()
+            .AddInMemoryCollection(new Dictionary<string, string?>()
             {
                 [nameof(ServiceOptions.Name)] = "Service Options"
             })
@@ -39,7 +39,7 @@ public class ConfigureOptionsFromConfigurationTests
     public void ConfigureOptionsFromConfigurationSection()
     {
         var configuration = new ConfigurationBuilder()
-            .AddInMemoryCollection(new Dictionary<string, string>()
+            .AddInMemoryCollection(new Dictionary<string, string?>()
             {
                 [$"{nameof(ServiceOptions)}:{nameof(ServiceOptions.Name)}"] = "Service Options"
             })
@@ -61,7 +61,7 @@ public class ConfigureOptionsFromConfigurationTests
     public void ConfigureNamedOptionsFromConfiguration()
     {
         var configuration = new ConfigurationBuilder()
-            .AddInMemoryCollection(new Dictionary<string, string>()
+            .AddInMemoryCollection(new Dictionary<string, string?>()
             {
                 [$"name:{nameof(ServiceOptions.Name)}"] = "Service Options"
             })

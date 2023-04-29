@@ -1,4 +1,3 @@
-﻿using AutoFixture;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -41,7 +40,6 @@ public class LoggerTelemetrySerivceCollectionExtensionsTests
 
     private static ServiceProvider CreateServiceProvider()
     {
-        var fixture = new Fixture();
         var services = new ServiceCollection();
         services.AddLogging();
         services.AddTransient(_ => TelemetryClientFixture.Create());

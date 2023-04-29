@@ -117,7 +117,8 @@ internal class HealthReportExceptionConverter : JsonConverter<Exception>
         writer.WriteEndObject();
     }
 
-    private class JsonSerializedException : Exception
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Critical Code Smell", "S3871:Exception types should be \"public\"", Justification = "Used for serialization only")]
+    private sealed class JsonSerializedException : Exception
     {
         private readonly string _stackTrace;
 
